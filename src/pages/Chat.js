@@ -22,7 +22,7 @@ const Chatbot = () => {
       });
 
       const data = await res.json();
-      console.log(data)
+      console.log(data);
       if (res.ok) {
         setResponse(data.data);
       } else {
@@ -37,7 +37,7 @@ const Chatbot = () => {
 
   return (
     <div className="chatbot-container">
-      <h2>Mental Health Chatbot</h2>
+      <h1>Mental Health Companion</h1>
       <div className="chat-input-area">
         <textarea
           value={prompt}

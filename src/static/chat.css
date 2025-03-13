@@ -1,63 +1,71 @@
 .chatbot-container {
-    width: 100%;
-    max-width: 500px;
-    margin: 20px auto;
-    padding: 20px;
-    border-radius: 10px;
-    background: #f8f9fa;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-  }
-  
-  h2 {
-    color: #333;
-  }
-  
-  .chat-input-area {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    resize: none;
-  }
-  
-  button {
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
-  
-  .chat-response {
-    margin-top: 15px;
-    padding: 15px;
-    background: #e9f5ff;
-    border-radius: 5px;
-    text-align: left;
-  }
-  
-  .error {
-    color: red;
-    margin-top: 10px;
-  }
-  
+  width: 100%;
+  max-width: 500px;
+  margin: 80px auto; /* Moves the container down */
+  padding: 20px;
+  border-radius: 10px;
+  background: #f8f9fa;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
+  top: 50px; /* Adds extra spacing */
+}
+
+h1 {
+  color: #333;
+  font-size: 26px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.chat-input-area {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 18px; /* Enlarged text */
+  resize: none;
+  line-height: 1.5;
+}
+
+button {
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.chat-response {
+  margin-top: 15px;
+  padding: 15px;
+  background: #e9f5ff;
+  border-radius: 5px;
+  text-align: left;
+  font-size: 18px; /* Enlarged text */
+  line-height: 1.5;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+  font-size: 16px;
+}
