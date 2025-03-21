@@ -21,9 +21,8 @@ const Login = () => {
     })
       .then((res) => res.json())
       .then((response) => {
-        console.log(response)
         setLoading(false);
-        if (!response.success) {  ///the error is here -------> response.sucess does not exist
+        if (response.message !== "Login successful") {
           setInvalidLogin("Invalid credentials. Please try again.");
         } else {
           setLoggedIn(true);
