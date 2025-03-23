@@ -16,6 +16,7 @@ const Chatbot = () => {
 
     try {
       const res = await fetch("http://localhost:3000/api/v1/chat/completions", {
+        credentials: "include",
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt }),
