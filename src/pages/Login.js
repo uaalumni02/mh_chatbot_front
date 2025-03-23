@@ -4,6 +4,7 @@ import "../static/login.css";
 
 const Login = () => {
   const [userName, setUserName] = useState("");
+  const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [invalidLogin, setInvalidLogin] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
@@ -26,6 +27,7 @@ const Login = () => {
           setInvalidLogin("Invalid credentials. Please try again.");
         } else {
           setLoggedIn(true);
+          setUserId(response.user._id);
         }
       })
       .catch(() => {
@@ -36,7 +38,7 @@ const Login = () => {
 
   return (
     <div className="login-container">
-      {loggedIn && <Navigate to="/chat" />}
+      {loggedIn ? <Navigate to={`/chat/${userId}`} /> : ""}
       <div className="login-box">
         <h1>Welcome Back</h1>
         <p>Login to continue</p>

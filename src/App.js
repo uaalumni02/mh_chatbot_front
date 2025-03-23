@@ -11,7 +11,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route exact path="/" element={<Login />} />
-          <Route exact path="/chat" element={<Chat />} />
+          <Route exact path="/chat/:id" element={<Chat />} />
         </Routes>
       </BrowserRouter>
     </div>
