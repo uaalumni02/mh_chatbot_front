@@ -1,4 +1,4 @@
-\/* Polished and Professional Chatbot UI */
+/* Polished and Professional Chatbot UI */
 .chatbot-container {
   width: 100% !important;
   max-width: 550px !important; /* Slightly wider for better spacing */
@@ -79,6 +79,10 @@ button:disabled {
   font-size: 18px !important;
   line-height: 1.6 !important;
   font-style: italic !important;
+  word-wrap: break-word !important;
+  overflow: hidden !important;
+  max-height: 200px !important; /* Prevents excessive stretching */
+  overflow-y: auto !important; /* Enables scrolling for long responses */
 }
 
 .error {
