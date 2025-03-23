@@ -48,7 +48,7 @@ const Chatbot = () => {
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           placeholder="Type your thoughts here..."
-          rows="3"
+          rows="4"
         />
         <button onClick={handleSubmit} disabled={loading}>
           {loading ? "Processing..." : "Send"}
