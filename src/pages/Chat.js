@@ -21,13 +21,15 @@ const Chatbot = () => {
         credentials: "include",
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({userName: id, prompt }),
+        body: JSON.stringify({ userName: id, prompt }),
       });
 
       const data = await res.json();
       console.log(data);
+
       if (res.ok) {
         setResponse(data.data);
+        setPrompt(""); // ✅ Clear input field after response is generated
       } else {
         throw new Error(data.error || "Something went wrong");
       }
