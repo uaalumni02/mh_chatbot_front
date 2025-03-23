@@ -8,6 +8,8 @@ const Chatbot = () => {
   const [error, setError] = useState("");
 
   const handleSubmit = async () => {
+    const url = window.location.pathname;
+    const id = url.substring(url.lastIndexOf("/") + 1);
     if (!prompt.trim()) return;
 
     setLoading(true);
@@ -19,7 +21,7 @@ const Chatbot = () => {
         credentials: "include",
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt }),
+        body: JSON.stringify({userName: id, prompt }),
       });
 
       const data = await res.json();
