@@ -37,10 +37,13 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 15px;
+  align-items: center; /* Centers the content horizontally */
+  width: 100%; /* Ensures the area stretches across the container */
 }
 
 textarea {
-  width: 100%;
+  width: 80%; /* Limit the width to 80% for a better appearance */
+  max-width: 500px; /* Add max-width for better responsiveness */
   padding: 16px;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -59,6 +62,8 @@ textarea:focus {
 
 button {
   padding: 14px;
+  width: 80%; /* Limit the width of the button */
+  max-width: 500px; /* Add max-width for consistency */
   border: none;
   border-radius: 8px;
   background: linear-gradient(135deg, #007bff, #0056b3);
