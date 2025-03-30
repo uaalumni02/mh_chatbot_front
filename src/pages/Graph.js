@@ -17,18 +17,24 @@ const MoodTrendsGraph = () => {
   const fetchUserChats = () => {
     const url = window.location.pathname;
     const id = url.substring(url.lastIndexOf("/") + 1);
+
     fetch(`http://localhost:3000/api/chat/${id}`, {
       method: "GET",
       credentials: "include",
     })
       .then((res) => res.json())
       .then((response) => {
-        const fetchedData = response.data.map((entry) => ({
-          date: entry.createdAt,
-          mood: entry.mood,
-          moodLabel: getMoodLabel(entry.mood),
-          message: entry.prompt,
-        }));
+        const fetchedData = response.data.map((entry, index) => {
+          console.log("Entry:", entry); // Debugging log
+
+          return {
+            date: new Date(entry.createdAt).toLocaleDateString(), // Format date
+            mood: entry.mood.score, // Use score (number) for the graph
+            moodLabel: entry.mood.mood, // Use mood (string) for display
+            message: entry.prompt || "No message available", // Handle missing messages
+          };
+        });
+
         setMoodEntries(fetchedData);
       })
       .catch((error) => console.error("Error:", error));
@@ -42,10 +48,6 @@ const MoodTrendsGraph = () => {
     setFormattedData(moodEntries);
   }, [moodEntries]);
 
-  const getMoodLabel = (mood) => {
-    return mood === 1 ? "Positive" : mood === 0 ? "Neutral" : "Negative";
-  };
-
   return (
     <div className="mood-trends-container">
       <h1>Mood Trends</h1>
@@ -55,9 +57,16 @@ const MoodTrendsGraph = () => {
           <XAxis dataKey="date" />
           <YAxis
             domain={[-1, 1]}
-            tickFormatter={(tick) => getMoodLabel(tick)}
+            tickFormatter={(tick) =>
+              tick === 1 ? "Positive" : tick === 0 ? "Neutral" : "Negative"
+            }
           />
-          <Tooltip formatter={(value) => [getMoodLabel(value), "Mood"]} />
+          <Tooltip
+            formatter={(value) => [
+              value === 1 ? "Positive" : value === 0 ? "Neutral" : "Negative",
+              "Mood",
+            ]}
+          />
           <Line
             type="monotone"
             dataKey="mood"
@@ -67,6 +76,7 @@ const MoodTrendsGraph = () => {
           />
         </LineChart>
       </ResponsiveContainer>
+
       <div className="mood-messages">
         <h2>Recent Mood Analysis</h2>
         <ul>
