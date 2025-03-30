@@ -13,7 +13,31 @@ import "../static/graph.css";
 const MoodTrendsGraph = ({ moodData }) => {
   const [formattedData, setFormattedData] = useState([]);
 
+  const fetchUserChats = () => {
+    const url = window.location.pathname;
+    const id = url.substring(url.lastIndexOf("/") + 1);
+    fetch(`http://localhost:3000/api/chat/${id}`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => console.error("Error:", error));
+  };
+
+
+
+
+
+
+
+
+
+  
   useEffect(() => {
+    fetchUserChats();
     if (moodData && moodData.length) {
       setFormattedData(
         moodData.map((entry) => ({
