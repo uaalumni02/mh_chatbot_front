@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Navbar from "./Navbar";
 import {
   LineChart,
   Line,
@@ -49,6 +50,8 @@ const MoodTrendsGraph = () => {
   }, [moodEntries]);
 
   return (
+    <>
+      <Navbar />
     <div className="mood-trends-container">
       <h1>Mood Trends</h1>
       <ResponsiveContainer width="100%" height={300}>
@@ -89,6 +92,7 @@ const MoodTrendsGraph = () => {
         </ul>
       </div>
     </div>
+    </>
   );
 };
 

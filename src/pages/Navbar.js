@@ -14,12 +14,22 @@ const Navbar = () => {
     });
 
     sessionStorage.clear();
-
-    // navigate("/"); // Uncomment to navigate to the homepage after logout
   };
 
   // Check if the current path is the chat page
-  const isChatPage = location.pathname.includes("chat")
+  const isChatPage = location.pathname.includes("chat");
+  const isGraphPage = location.pathname.includes("graph");
+
+  // Handle Mood link click
+  const handleMoodClick = () => {
+    const userId = window.location.pathname.split("/").pop();
+    navigate(`/graph/${userId}`);
+  };
+
+  const handleChatClick = () => {
+    const userId = window.location.pathname.split("/").pop();
+    navigate(`/chat/${userId}`);
+  };
 
   return (
     <nav className="navbar">
@@ -28,14 +38,18 @@ const Navbar = () => {
         <ul className="navbar-links">
           <li>
             <a
-              href="/chat"
+              onClick={handleChatClick}
               className={`navbar-link ${isChatPage ? "inactive" : ""}`} // Add 'inactive' class if on the chat page
             >
               Chat
             </a>
           </li>
           <li>
-            <a href="/about" className="navbar-link">
+            <a
+              onClick={handleMoodClick}
+              className={`navbar-link ${isGraphPage ? "inactive" : ""}`}
+              style={{ cursor: "pointer" }}
+            >
               Mood
             </a>
           </li>
