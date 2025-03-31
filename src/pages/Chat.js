@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Navbar from "./Navbar";
 import "../static/chat.css";
 
 const Chatbot = () => {
@@ -41,22 +42,25 @@ const Chatbot = () => {
   };
 
   return (
-    <div className="chatbot-container">
-      <h1>Mental Health Companion</h1>
-      <div className="chat-input-area">
-        <textarea
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          placeholder="Type your thoughts here..."
-          rows="4"
-        />
-        <button onClick={handleSubmit} disabled={loading}>
-          {loading ? "Processing..." : "Send"}
-        </button>
+    <>
+      <Navbar />
+      <div className="chatbot-container">
+        <h1>Mental Health Companion</h1>
+        <div className="chat-input-area">
+          <textarea
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            placeholder="Type your thoughts here..."
+            rows="4"
+          />
+          <button onClick={handleSubmit} disabled={loading}>
+            {loading ? "Processing..." : "Send"}
+          </button>
+        </div>
+        {error && <p className="error">{error}</p>}
+        {response && <div className="chat-response">{response}</div>}
       </div>
-      {error && <p className="error">{error}</p>}
-      {response && <div className="chat-response">{response}</div>}
-    </div>
+    </>
   );
 };
 
