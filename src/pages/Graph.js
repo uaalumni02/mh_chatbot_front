@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Navbar from "./Navbar";
 import {
   LineChart,
@@ -12,7 +12,6 @@ import {
 import "../static/graph.css";
 
 const MoodTrendsGraph = () => {
-  const [formattedData, setFormattedData] = useState([]);
   const [moodEntries, setMoodEntries] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
@@ -28,8 +27,8 @@ const MoodTrendsGraph = () => {
       .then((response) => {
         const fetchedData = response.data.map((entry) => ({
           id: entry._id, // Assuming each entry has a unique ID
-          date: new Date(entry.createdAt).toLocaleDateString(),
-          mood: entry.mood.score,
+          date: new Date(entry.createdAt).toISOString().split("T")[0], // Format YYYY-MM-DD
+          mood: Number(entry.mood.score), // Ensure mood is a number
           moodLabel: entry.mood.mood,
           message: entry.prompt || "No message available",
         }));
@@ -43,12 +42,13 @@ const MoodTrendsGraph = () => {
     fetchUserChats();
   }, []);
 
-  useEffect(() => {
-    setFormattedData(moodEntries);
-  }, [moodEntries]);
+  const formattedData = useMemo(() => moodEntries, [moodEntries]);
 
   const handleDeleteAll = () => {
-    fetch(`http://localhost:3000/api/chat/deleteAll`, {
+    const url = window.location.pathname;
+    const id = url.substring(url.lastIndexOf("/") + 1);
+
+    fetch(`http://localhost:3000/api/chat/${id}`, {
       method: "DELETE",
       credentials: "include",
     })
@@ -64,39 +64,47 @@ const MoodTrendsGraph = () => {
     <>
       <Navbar />
       <div className="mood-trends-container">
-        <br></br><br></br>
+        <br></br>       <br></br>
         <h1>Mood Trends</h1>
 
         <div className="responsive-chart-container">
-          <ResponsiveContainer width="100%" height={350}>
-            <LineChart data={formattedData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" />
-              <YAxis
-                domain={[-1, 1]}
-                tickFormatter={(tick) =>
-                  tick === 1 ? "Positive" : tick === 0 ? "Neutral" : "Negative"
-                }
-              />
-              <Tooltip
-                formatter={(value) => [
-                  value === 1
-                    ? "Positive"
-                    : value === 0
-                    ? "Neutral"
-                    : "Negative",
-                  "Mood",
-                ]}
-              />
-              <Line
-                type="monotone"
-                dataKey="mood"
-                stroke="#007bff"
-                strokeWidth={3}
-                dot={{ r: 5, fill: "#0056b3" }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          {formattedData.length > 0 ? (
+            <ResponsiveContainer width="100%" height={350}>
+              <LineChart data={formattedData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis
+                  domain={[-1, 1]}
+                  tickFormatter={(tick) =>
+                    tick === 1
+                      ? "Positive"
+                      : tick === 0
+                      ? "Neutral"
+                      : "Negative"
+                  }
+                />
+                <Tooltip
+                  formatter={(value) => [
+                    value === 1
+                      ? "Positive"
+                      : value === 0
+                      ? "Neutral"
+                      : "Negative",
+                    "Mood",
+                  ]}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="mood"
+                  stroke="#007bff"
+                  strokeWidth={3}
+                  dot={{ r: 5, fill: "#0056b3" }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          ) : (
+            <p className="no-data-message">No mood data available</p>
+          )}
         </div>
 
         <div className="mood-messages">
