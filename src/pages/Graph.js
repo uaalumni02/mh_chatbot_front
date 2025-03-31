@@ -26,6 +26,7 @@ const MoodTrendsGraph = () => {
       .then((res) => res.json())
       .then((response) => {
         const fetchedData = response.data.map((entry) => ({
+          id: entry._id, // Assuming each entry has a unique ID
           date: new Date(entry.createdAt).toLocaleDateString(),
           mood: entry.mood.score,
           moodLabel: entry.mood.mood,
@@ -45,13 +46,25 @@ const MoodTrendsGraph = () => {
     setFormattedData(moodEntries);
   }, [moodEntries]);
 
+  const handleDeleteAll = () => {
+    fetch(`http://localhost:3000/api/chat/deleteAll`, {
+      method: "DELETE",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then(() => {
+        setMoodEntries([]);
+      })
+      .catch((error) => console.error("Error:", error));
+  };
+
   return (
     <>
       <Navbar />
       <div className="mood-trends-container">
         <br></br>
         <h1>Mood Trends</h1>
-        
+
         <div className="responsive-chart-container">
           <ResponsiveContainer width="100%" height={350}>
             <LineChart data={formattedData}>
@@ -65,7 +78,11 @@ const MoodTrendsGraph = () => {
               />
               <Tooltip
                 formatter={(value) => [
-                  value === 1 ? "Positive" : value === 0 ? "Neutral" : "Negative",
+                  value === 1
+                    ? "Positive"
+                    : value === 0
+                    ? "Neutral"
+                    : "Negative",
                   "Mood",
                 ]}
               />
@@ -83,12 +100,16 @@ const MoodTrendsGraph = () => {
         <div className="mood-messages">
           <h2>Recent Mood Analysis</h2>
           <ul>
-            {formattedData.map((entry, index) => (
-              <li key={index}>
-                <strong>{entry.date}:</strong> {entry.moodLabel} - "{entry.message}"
+            {formattedData.map((entry) => (
+              <li key={entry.id} className="mood-entry">
+                <strong>{entry.date}:</strong> {entry.moodLabel} - "
+                {entry.message}"
               </li>
             ))}
           </ul>
+          <button className="delete-button" onClick={handleDeleteAll}>
+            Delete Chat
+          </button>
         </div>
       </div>
     </>
