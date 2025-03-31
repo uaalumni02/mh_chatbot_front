@@ -1,8 +1,11 @@
 import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../static/navbar.css";
 
 const Navbar = () => {
+  const location = useLocation(); // Get the current location (path)
+  const navigate = useNavigate(); // To programmatically navigate if needed
+
   const handleLogout = () => {
     document.cookie.split(";").forEach((cookie) => {
       document.cookie = cookie
@@ -12,8 +15,11 @@ const Navbar = () => {
 
     sessionStorage.clear();
 
-    // navigate("/");
+    // navigate("/"); // Uncomment to navigate to the homepage after logout
   };
+
+  // Check if the current path is the chat page
+  const isChatPage = location.pathname.includes("chat")
 
   return (
     <nav className="navbar">
@@ -21,7 +27,10 @@ const Navbar = () => {
         <h1 className="navbar-title">Mental Health Companion</h1>
         <ul className="navbar-links">
           <li>
-            <a href="/" className="navbar-link">
+            <a
+              href="/chat"
+              className={`navbar-link ${isChatPage ? "inactive" : ""}`} // Add 'inactive' class if on the chat page
+            >
               Chat
             </a>
           </li>

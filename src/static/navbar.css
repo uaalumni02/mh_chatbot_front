@@ -67,6 +67,17 @@ body {
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.7);
 }
 
+/* Inactive Link Styling */
+.navbar-link.inactive {
+  color: #ccc; /* Gray out the link */
+  pointer-events: none; /* Disable interactions */
+  text-decoration: none; /* Remove underline when inactive */
+}
+
+.navbar-link.inactive:hover {
+  color: #ccc; /* No change on hover for inactive link */
+}
+
 /* Special Styling for Logout */
 .logout {
   background-color: #ff4d4d; /* Red background for Logout */
