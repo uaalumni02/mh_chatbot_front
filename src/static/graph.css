@@ -1,49 +1,47 @@
 .mood-trends-container {
-    width: 100%;
-    max-width: 600px;
-    margin: 40px auto;
-    padding: 20px;
-    border-radius: 12px;
-    background: #ffffff;
-    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.15);
-    text-align: center;
-  }
-  
-  h1 {
-    color: #333;
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
-  
-  /* Styles for the mood messages list */
-  .mood-messages {
-    margin-top: 20px;
-    padding: 15px;
-    background: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: left;
-  }
-  
-  .mood-messages h2 {
-    font-size: 20px;
-    color: #007bff;
-    margin-bottom: 10px;
-  }
-  
-  .mood-messages ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .mood-messages li {
-    font-size: 16px;
-    padding: 8px 0;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .mood-messages li:last-child {
-    border-bottom: none;
-  }
-  
+  width: 90%;
+  max-width: 1000px;
+  height: 600px; /* Fixed height to prevent resizing */
+  margin: 60px auto;
+  padding: 40px;
+  border-radius: 15px;
+  background: #ffffff;
+  box-shadow: 0px 12px 35px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Prevents unintended growth */
+}
+
+/* Ensures the graph remains properly sized */
+.responsive-chart-container {
+  flex-grow: 1; /* Allows the chart to take available space */
+  min-height: 350px;
+}
+
+/* Styles for the mood messages list with scrolling */
+.mood-messages {
+  margin-top: 20px;
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  overflow-y: auto; /* Enables scrolling */
+  max-height: 200px; /* Prevents it from growing infinitely */
+}
+
+.mood-messages ul {
+  list-style: none;
+  padding: 0;
+}
+
+.mood-messages li {
+  font-size: 16px;
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.mood-messages li:last-child {
+  border-bottom: none;
+}
