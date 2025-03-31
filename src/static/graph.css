@@ -1,3 +1,4 @@
+/* Mood Trends Container */
 .mood-trends-container {
   width: 90%;
   max-width: 1000px;
@@ -44,4 +45,83 @@
 
 .mood-messages li:last-child {
   border-bottom: none;
+}
+
+/* Delete Button */
+.delete-button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: #ff4d4d;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.delete-button:hover {
+  background: #cc0000;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal Content */
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+}
+
+.modal-content h2 {
+  margin-bottom: 15px;
+}
+
+.modal-content p {
+  margin-bottom: 20px;
+}
+
+/* Modal Buttons */
+.confirm-button, .cancel-button {
+  padding: 10px 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 5px;
+  transition: background 0.3s ease;
+}
+
+.confirm-button {
+  background: #ff4d4d;
+  color: white;
+}
+
+.confirm-button:hover {
+  background: #cc0000;
+}
+
+.cancel-button {
+  background: #ccc;
+  color: black;
+}
+
+.cancel-button:hover {
+  background: #999;
 }

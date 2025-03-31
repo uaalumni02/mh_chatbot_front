@@ -14,6 +14,7 @@ import "../static/graph.css";
 const MoodTrendsGraph = () => {
   const [formattedData, setFormattedData] = useState([]);
   const [moodEntries, setMoodEntries] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
   const fetchUserChats = () => {
     const url = window.location.pathname;
@@ -54,6 +55,7 @@ const MoodTrendsGraph = () => {
       .then((res) => res.json())
       .then(() => {
         setMoodEntries([]);
+        setShowModal(false);
       })
       .catch((error) => console.error("Error:", error));
   };
@@ -62,7 +64,7 @@ const MoodTrendsGraph = () => {
     <>
       <Navbar />
       <div className="mood-trends-container">
-        <br></br>
+        <br></br><br></br>
         <h1>Mood Trends</h1>
 
         <div className="responsive-chart-container">
@@ -107,11 +109,29 @@ const MoodTrendsGraph = () => {
               </li>
             ))}
           </ul>
-          <button className="delete-button" onClick={handleDeleteAll}>
+          <button className="delete-button" onClick={() => setShowModal(true)}>
             Delete Chat
           </button>
         </div>
       </div>
+
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h2>Confirm Deletion</h2>
+            <p>Are you sure you want to delete all chats?</p>
+            <button className="confirm-button" onClick={handleDeleteAll}>
+              Confirm
+            </button>
+            <button
+              className="cancel-button"
+              onClick={() => setShowModal(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 };
