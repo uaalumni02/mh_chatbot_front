@@ -31,6 +31,26 @@ const Navbar = () => {
     navigate(`/chat/${userId}`);
   };
 
+  const generatePdf = () => {
+    const url = window.location.pathname;
+    const id = url.substring(url.lastIndexOf("/") + 1);
+  
+    fetch(`http://localhost:3000/api/pdf/${id}`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((res) => res.blob()) // Convert response to a Blob (PDF file)
+      .then((blob) => {
+        console.log("Received PDF Blob:", blob); // Log the blob object
+  
+        // Create a URL for the blob and open it in a new tab
+        const pdfUrl = URL.createObjectURL(blob);
+        window.open(pdfUrl);
+      })
+      .catch((error) => console.error("Error:", error));
+  };
+  
+
   return (
     <nav className="navbar">
       <div className="navbar-content">
@@ -53,6 +73,16 @@ const Navbar = () => {
               Mood
             </a>
           </li>
+
+          <li>
+            <a
+              className={`navbar-link ${isChatPage ? "inactive" : ""}`}
+              onClick={generatePdf}
+            >
+              PDF
+            </a>
+          </li>
+
           <li>
             <a href="/" className="navbar-link logout" onClick={handleLogout}>
               Logout
