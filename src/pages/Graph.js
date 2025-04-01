@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
 import Navbar from "./Navbar";
 import {
   LineChart,
@@ -12,6 +13,7 @@ import {
 import "../static/graph.css";
 
 const MoodTrendsGraph = () => {
+  const { loggedIn, checkLogin } = useContext(UserContext); // Ensure checkLogin is accessible
   const [moodEntries, setMoodEntries] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
@@ -39,6 +41,7 @@ const MoodTrendsGraph = () => {
   };
 
   useEffect(() => {
+    checkLogin();
     fetchUserChats();
   }, []);
 
@@ -62,11 +65,10 @@ const MoodTrendsGraph = () => {
 
   return (
     <>
-      <Navbar />
+      {loggedIn && <Navbar />}
       <div className="mood-trends-container">
-        <br></br>       <br></br>
+        <br></br> <br></br>
         <h1>Mood Trends</h1>
-
         <div className="responsive-chart-container">
           {formattedData.length > 0 ? (
             <ResponsiveContainer width="100%" height={350}>
@@ -106,7 +108,6 @@ const MoodTrendsGraph = () => {
             <p className="no-data-message">No mood data available</p>
           )}
         </div>
-
         <div className="mood-messages">
           <h2>Recent Mood Analysis</h2>
           <ul>
