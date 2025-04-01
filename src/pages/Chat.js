@@ -1,12 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import { UserContext } from "../contexts/UserContext";
 import Navbar from "./Navbar";
 import "../static/chat.css";
 
 const Chatbot = () => {
+  const { loggedIn, checkLogin } = useContext(UserContext); // Ensure checkLogin is accessible
   const [prompt, setPrompt] = useState("");
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // Run checkLogin when Chatbot loads
+  useEffect(() => {
+    checkLogin(); // Ensures login state updates immediately
+  }, []);
 
   const handleSubmit = async () => {
     const url = window.location.pathname;
@@ -30,7 +37,7 @@ const Chatbot = () => {
 
       if (res.ok) {
         setResponse(data.data);
-        setPrompt(""); // ✅ Clear input field after response is generated
+        setPrompt("");
       } else {
         throw new Error(data.error || "Something went wrong");
       }
@@ -43,7 +50,9 @@ const Chatbot = () => {
 
   return (
     <>
-      <Navbar />
+      {/* 🔹 Use `loggedIn` directly */}
+      {loggedIn && <Navbar />}
+
       <div className="chatbot-container">
         <h1>Mental Health Companion</h1>
         <div className="chat-input-area">
