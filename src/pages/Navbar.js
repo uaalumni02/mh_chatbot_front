@@ -7,13 +7,15 @@ const Navbar = () => {
   const navigate = useNavigate(); // To programmatically navigate if needed
 
   const handleLogout = () => {
-    document.cookie.split(";").forEach((cookie) => {
-      document.cookie = cookie
-        .replace(/^ +/, "")
-        .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
-    });
-
-    sessionStorage.clear();
+    fetch("http://localhost:3000/api/logout", {
+      method: "POST",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((response) => {
+        console.log(response);
+      })
+      .catch(() => {});
   };
 
   // Check if the current path is the chat page
@@ -34,7 +36,7 @@ const Navbar = () => {
   const generatePdf = () => {
     const url = window.location.pathname;
     const id = url.substring(url.lastIndexOf("/") + 1);
-  
+
     fetch(`http://localhost:3000/api/pdf/${id}`, {
       method: "GET",
       credentials: "include",
@@ -42,14 +44,13 @@ const Navbar = () => {
       .then((res) => res.blob()) // Convert response to a Blob (PDF file)
       .then((blob) => {
         console.log("Received PDF Blob:", blob); // Log the blob object
-  
+
         // Create a URL for the blob and open it in a new tab
         const pdfUrl = URL.createObjectURL(blob);
         window.open(pdfUrl);
       })
       .catch((error) => console.error("Error:", error));
   };
-  
 
   return (
     <nav className="navbar">
