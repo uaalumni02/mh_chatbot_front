@@ -21,6 +21,7 @@ const Navbar = () => {
   // Check if the current path is the chat page
   const isChatPage = location.pathname.includes("chat");
   const isGraphPage = location.pathname.includes("graph");
+  const isJournalPage = location.pathname.includes("journal");
 
   // Handle Mood link click
   const handleMoodClick = () => {
@@ -31,6 +32,11 @@ const Navbar = () => {
   const handleChatClick = () => {
     const userId = window.location.pathname.split("/").pop();
     navigate(`/chat/${userId}`);
+  };
+
+  const handleJournalClick = () => {
+    const userId = window.location.pathname.split("/").pop();
+    navigate(`/journal/${userId}`);
   };
 
   const generatePdf = () => {
@@ -81,6 +87,15 @@ const Navbar = () => {
               onClick={generatePdf}
             >
               PDF
+            </a>
+          </li>
+
+          <li>
+            <a
+              onClick={handleJournalClick}
+              className={`navbar-link ${isJournalPage ? "inactive" : ""}`}
+            >
+              Journal
             </a>
           </li>
 

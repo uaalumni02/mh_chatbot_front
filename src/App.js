@@ -19,7 +19,7 @@ function App() {
           <Route exact path="/register" element={<Register />} />
           <Route exact path="/chat/:id" element={<Chat />} />
           <Route exact path="/graph/:id" element={<Graph />} />
-          <Route exact path="/journal" element={<Journal />} />
+          <Route exact path="/journal/:id" element={<Journal />} />
         </Routes>
         </UserContextProvider>
       </BrowserRouter>
