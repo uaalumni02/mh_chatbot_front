@@ -1,0 +1,113 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #A8B9FF, #81E0D3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  /* Bigger Journal Container */
+  .journal-container {
+    width: 100%;
+    max-width: 800px; /* Increased width */
+    margin: 60px auto;
+    padding: 40px; /* Increased padding */
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0px 12px 40px rgba(0, 0, 0, 0.18);
+    text-align: center;
+  }
+  
+  /* Title */
+  h1 {
+    color: #333;
+    font-size: 32px; /* Slightly larger */
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  /* Input Area */
+  .journal-input-area {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    width: 100%;
+  }
+  
+  /* Bigger textarea */
+  textarea {
+    width: 90%;
+    max-width: 700px; /* Wider */
+    height: 250px; /* Taller */
+    padding: 18px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 18px;
+    resize: vertical;
+    line-height: 1.8;
+    background: #f9f9f9;
+    transition: border 0.3s ease;
+  }
+  
+  textarea:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 6px rgba(0, 123, 255, 0.4);
+  }
+  
+  /* Button remains the same */
+  button {
+    padding: 16px;
+    width: 90%;
+    max-width: 700px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  button:hover {
+    background: linear-gradient(135deg, #0056b3, #004094);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  
+  /* Display Entry */
+  .journal-response {
+    margin-top: 25px;
+    padding: 20px;
+    background: #e9f5ff;
+    border-left: 4px solid #007bff;
+    border-radius: 10px;
+    text-align: left;
+    font-size: 17px;
+    line-height: 1.8;
+    word-wrap: break-word;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  
+  /* Error Message */
+  .error {
+    color: #d9534f;
+    margin-top: 14px;
+    font-size: 17px;
+    font-weight: bold;
+  }
+  

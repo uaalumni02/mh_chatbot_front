@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Chat from "./pages/Chat";
 import Graph from "./pages/Graph";
+import Journal from "./pages/Journal";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route exact path="/register" element={<Register />} />
           <Route exact path="/chat/:id" element={<Chat />} />
           <Route exact path="/graph/:id" element={<Graph />} />
+          <Route exact path="/journal" element={<Journal />} />
         </Routes>
         </UserContextProvider>
       </BrowserRouter>
