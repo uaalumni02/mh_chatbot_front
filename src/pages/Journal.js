@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { UserContext } from "../contexts/UserContext";
 import Navbar from "./Navbar";
+import { submitJournalEntry } from "../api/journal"; // ✅ New import
 import "../static/journal.css";
 
 const Journal = () => {
@@ -10,13 +11,13 @@ const Journal = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const userName = window.location.pathname.split("/").pop(); // Extract once and reuse
+
   useEffect(() => {
     checkLogin();
   }, []);
 
   const handleJournalSubmit = async () => {
-    const url = window.location.pathname;
-    const userName = url.substring(url.lastIndexOf("/") + 1);
     if (!entry.trim()) return;
 
     setLoading(true);
@@ -24,20 +25,9 @@ const Journal = () => {
     setSubmittedEntry("");
 
     try {
-      const res = await fetch("http://localhost:3000/api/journal", {
-        credentials: "include",
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userName, journal: entry }),
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        setSubmittedEntry(entry);
-        setEntry("");
-      } else {
-        throw new Error(data.error || "Unable to save journal entry.");
-      }
+      await submitJournalEntry(userName, entry);
+      setSubmittedEntry(entry);
+      setEntry("");
     } catch (err) {
       setError(err.message);
     } finally {
