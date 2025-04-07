@@ -1,35 +1,41 @@
 import React, { useState } from "react";
 import { Navigate, Link } from "react-router-dom";
-import { loginUser } from "../api/auth"; 
+import { loginUser } from "../api/auth";
+import initialState from "../store/store";
 import "../static/login.css";
 
 const Login = () => {
-  const [userName, setUserName] = useState("");
-  const [userId, setUserId] = useState("");
-  const [password, setPassword] = useState("");
-  const [invalidLogin, setInvalidLogin] = useState("");
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [login, setLogin] = useState(initialState.login);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setLogin((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setLoading(true);
-    setInvalidLogin("");
+    setLogin((prev) => ({ ...prev, loading: true, invalidLogin: "" }));
 
     try {
-      const user = await loginUser(userName, password);
-      setUserId(user._id);
-      setLoggedIn(true);
+      const user = await loginUser(login.userName, login.password);
+      setLogin((prev) => ({
+        ...prev,
+        userId: user._id,
+        loggedIn: true,
+        loading: false,
+      }));
     } catch (err) {
-      setInvalidLogin(err.message || "Login failed");
-    } finally {
-      setLoading(false);
+      setLogin((prev) => ({
+        ...prev,
+        invalidLogin: err.message || "Login failed",
+        loading: false,
+      }));
     }
   };
 
   return (
     <div className="login-container">
-      {loggedIn ? <Navigate to={`/chat/${userId}`} /> : ""}
+      {login.loggedIn ? <Navigate to={`/chat/${login.userId}`} /> : ""}
       <div className="login-box">
         <h1>Welcome Back</h1>
         <p>Login to continue</p>
@@ -38,9 +44,10 @@ const Login = () => {
             <label>Username</label>
             <input
               type="text"
+              name="userName"
               placeholder="Enter username"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
+              value={login.userName}
+              onChange={handleChange}
               required
             />
           </div>
@@ -48,15 +55,18 @@ const Login = () => {
             <label>Password</label>
             <input
               type="password"
+              name="password"
               placeholder="Enter password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={login.password}
+              onChange={handleChange}
               required
             />
           </div>
-          {invalidLogin && <p className="error-message">{invalidLogin}</p>}
+          {login.invalidLogin && (
+            <p className="error-message">{login.invalidLogin}</p>
+          )}
           <button type="submit" className="login-button">
-            {loading ? <span className="spinner"></span> : "Login"}
+            {login.loading ? <span className="spinner"></span> : "Login"}
           </button>
         </form>
         <p>
