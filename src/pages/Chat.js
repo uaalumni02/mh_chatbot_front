@@ -1,23 +1,23 @@
 import React, { useState, useContext, useEffect } from "react";
 import { UserContext } from "../contexts/UserContext";
 import Navbar from "./Navbar";
+import { sendChatPrompt } from "../api/chat";
+import useUserIdFromPath from "../hooks/useUserIdFromPath";
 import "../static/chat.css";
 
 const Chatbot = () => {
-  const { loggedIn, checkLogin } = useContext(UserContext); // Ensure checkLogin is accessible
+  const { loggedIn, checkLogin } = useContext(UserContext);
   const [prompt, setPrompt] = useState("");
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const userId = useUserIdFromPath();
 
-  // Run checkLogin when Chatbot loads
   useEffect(() => {
-    checkLogin(); // Ensures login state updates immediately
+    checkLogin();
   }, []);
 
   const handleSubmit = async () => {
-    const url = window.location.pathname;
-    const id = url.substring(url.lastIndexOf("/") + 1);
     if (!prompt.trim()) return;
 
     setLoading(true);
@@ -25,22 +25,9 @@ const Chatbot = () => {
     setResponse("");
 
     try {
-      const res = await fetch("http://localhost:3000/api/v1/chat/completions", {
-        credentials: "include",
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userName: id, prompt }),
-      });
-
-      const data = await res.json();
-      console.log(data);
-
-      if (res.ok) {
-        setResponse(data.data);
-        setPrompt("");
-      } else {
-        throw new Error(data.error || "Something went wrong");
-      }
+      const result = await sendChatPrompt(userId, prompt);
+      setResponse(result);
+      setPrompt("");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -50,10 +37,12 @@ const Chatbot = () => {
 
   return (
     <>
-      {/* 🔹 Use `loggedIn` directly */}
       {loggedIn && <Navbar />}
-
+      <br></br>
+      <br></br>
       <div className="chatbot-container">
+        <br></br>
+        <br></br>
         <h1>Mental Health Companion</h1>
         <div className="chat-input-area">
           <textarea
