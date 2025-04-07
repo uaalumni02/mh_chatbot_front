@@ -10,64 +10,48 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { fetchMoodEntries, deleteAllMoodEntries } from "../api/graph";
 import "../static/graph.css";
 
 const MoodTrendsGraph = () => {
-  const { loggedIn, checkLogin } = useContext(UserContext); // Ensure checkLogin is accessible
+  const { loggedIn, checkLogin } = useContext(UserContext);
   const [moodEntries, setMoodEntries] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
-  const fetchUserChats = () => {
-    const url = window.location.pathname;
-    const id = url.substring(url.lastIndexOf("/") + 1);
-
-    fetch(`http://localhost:3000/api/chat/${id}`, {
-      method: "GET",
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((response) => {
-        const fetchedData = response.data.map((entry) => ({
-          id: entry._id, // Assuming each entry has a unique ID
-          date: new Date(entry.createdAt).toISOString().split("T")[0], // Format YYYY-MM-DD
-          mood: Number(entry.mood.score), // Ensure mood is a number
-          moodLabel: entry.mood.mood,
-          message: entry.prompt || "No message available",
-        }));
-
-        setMoodEntries(fetchedData);
-      })
-      .catch((error) => console.error("Error:", error));
-  };
+  const userId = window.location.pathname.split("/").pop(); // Extract once and reuse
 
   useEffect(() => {
     checkLogin();
-    fetchUserChats();
+    const loadMoodEntries = async () => {
+      try {
+        const data = await fetchMoodEntries(userId);
+        setMoodEntries(data);
+      } catch (err) {
+        console.error("Error fetching mood data:", err.message);
+      }
+    };
+
+    loadMoodEntries();
   }, []);
 
   const formattedData = useMemo(() => moodEntries, [moodEntries]);
 
-  const handleDeleteAll = () => {
-    const url = window.location.pathname;
-    const id = url.substring(url.lastIndexOf("/") + 1);
-
-    fetch(`http://localhost:3000/api/chat/${id}`, {
-      method: "DELETE",
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then(() => {
-        setMoodEntries([]);
-        setShowModal(false);
-      })
-      .catch((error) => console.error("Error:", error));
+  const handleDeleteAll = async () => {
+    try {
+      await deleteAllMoodEntries(userId);
+      setMoodEntries([]);
+      setShowModal(false);
+    } catch (err) {
+      console.error("Error deleting mood data:", err.message);
+    }
   };
 
   return (
     <>
       {loggedIn && <Navbar />}
       <div className="mood-trends-container">
-        <br></br> <br></br>
+        <br />
+        <br />
         <h1>Mood Trends</h1>
         <div className="responsive-chart-container">
           {formattedData.length > 0 ? (
