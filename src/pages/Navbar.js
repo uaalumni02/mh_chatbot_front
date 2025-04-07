@@ -1,62 +1,31 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../static/navbar.css";
+import { logoutUser } from "../api/userLogout";
+import { downloadUserPdf } from "../api/pdfApi";
 
 const Navbar = () => {
-  const location = useLocation(); // Get the current location (path)
-  const navigate = useNavigate(); // To programmatically navigate if needed
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const handleLogout = () => {
-    fetch("http://localhost:3000/api/logout", {
-      method: "POST",
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((response) => {
-        console.log(response);
-      })
-      .catch(() => {});
+  const userId = window.location.pathname.split("/").pop();
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+    } catch (err) {
+      console.error("Logout failed");
+    }
   };
 
-  // Check if the current path is the chat page
+  const handleMoodClick = () => navigate(`/graph/${userId}`);
+  const handleChatClick = () => navigate(`/chat/${userId}`);
+  const handleJournalClick = () => navigate(`/journal/${userId}`);
+  const handlePdfDownload = () => downloadUserPdf(userId);
+
   const isChatPage = location.pathname.includes("chat");
   const isGraphPage = location.pathname.includes("graph");
   const isJournalPage = location.pathname.includes("journal");
-
-  // Handle Mood link click
-  const handleMoodClick = () => {
-    const userId = window.location.pathname.split("/").pop();
-    navigate(`/graph/${userId}`);
-  };
-
-  const handleChatClick = () => {
-    const userId = window.location.pathname.split("/").pop();
-    navigate(`/chat/${userId}`);
-  };
-
-  const handleJournalClick = () => {
-    const userId = window.location.pathname.split("/").pop();
-    navigate(`/journal/${userId}`);
-  };
-
-  const generatePdf = () => {
-    const url = window.location.pathname;
-    const id = url.substring(url.lastIndexOf("/") + 1);
-
-    fetch(`http://localhost:3000/api/pdf/${id}`, {
-      method: "GET",
-      credentials: "include",
-    })
-      .then((res) => res.blob()) // Convert response to a Blob (PDF file)
-      .then((blob) => {
-        console.log("Received PDF Blob:", blob); // Log the blob object
-
-        // Create a URL for the blob and open it in a new tab
-        const pdfUrl = URL.createObjectURL(blob);
-        window.open(pdfUrl);
-      })
-      .catch((error) => console.error("Error:", error));
-  };
 
   return (
     <nav className="navbar">
@@ -66,7 +35,7 @@ const Navbar = () => {
           <li>
             <a
               onClick={handleChatClick}
-              className={`navbar-link ${isChatPage ? "inactive" : ""}`} // Add 'inactive' class if on the chat page
+              className={`navbar-link ${isChatPage ? "inactive" : ""}`}
             >
               Chat
             </a>
@@ -75,21 +44,15 @@ const Navbar = () => {
             <a
               onClick={handleMoodClick}
               className={`navbar-link ${isGraphPage ? "inactive" : ""}`}
-              style={{ cursor: "pointer" }}
             >
               Mood
             </a>
           </li>
-
           <li>
-            <a
-              className={`navbar-link ${isChatPage ? "inactive" : ""}`}
-              onClick={generatePdf}
-            >
+            <a onClick={handlePdfDownload} className="navbar-link">
               PDF
             </a>
           </li>
-
           <li>
             <a
               onClick={handleJournalClick}
@@ -98,7 +61,6 @@ const Navbar = () => {
               Journal
             </a>
           </li>
-
           <li>
             <a href="/" className="navbar-link logout" onClick={handleLogout}>
               Logout
