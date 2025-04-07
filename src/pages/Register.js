@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Navigate, Link } from "react-router-dom";
+import { registerUser } from "../api/register"; 
 import "../static/login.css";
 
 const Register = () => {
@@ -11,30 +12,20 @@ const Register = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
+    setInvalidRegister("");
 
-    fetch("http://localhost:3000/api/user", {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userName, email, password }),
-    })
-      .then((res) => res.json())
-      .then((response) => {
-        setLoading(false);
-        if (response.message !== "User created successfully") {
-          setInvalidRegister("Invalid credentials. Please try again.");
-        } else {
-          setLoggedIn(true);
-          setUserId(response.userData.userId);
-        }
-      })
-      .catch(() => {
-        setLoading(false);
-        setInvalidRegister("An error occurred. Please try again later.");
-      });
+    try {
+      const response = await registerUser({ userName, email, password });
+      setUserId(response.userData.userId);
+      setLoggedIn(true);
+    } catch (error) {
+      setInvalidRegister(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
