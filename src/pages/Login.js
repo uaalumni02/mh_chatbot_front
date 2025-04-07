@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Navigate, Link } from "react-router-dom";
+import { loginUser } from "../api/auth"; 
 import "../static/login.css";
 
 const Login = () => {
@@ -10,30 +11,20 @@ const Login = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
+    setInvalidLogin("");
 
-    fetch("http://localhost:3000/api/user/login", {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userName, password }),
-    })
-      .then((res) => res.json())
-      .then((response) => {
-        setLoading(false);
-        if (response.message !== "Login successful") {
-          setInvalidLogin("Invalid credentials. Please try again.");
-        } else {
-          setLoggedIn(true);
-          setUserId(response.user._id);
-        }
-      })
-      .catch(() => {
-        setLoading(false);
-        setInvalidLogin("An error occurred. Please try again later.");
-      });
+    try {
+      const user = await loginUser(userName, password);
+      setUserId(user._id);
+      setLoggedIn(true);
+    } catch (err) {
+      setInvalidLogin(err.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
