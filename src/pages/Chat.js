@@ -3,35 +3,33 @@ import { UserContext } from "../contexts/UserContext";
 import Navbar from "./Navbar";
 import { sendChatPrompt } from "../api/chat";
 import useUserIdFromPath from "../hooks/useUserIdFromPath";
+import initialState from "../store/store";
 import "../static/chat.css";
 
 const Chatbot = () => {
   const { loggedIn, checkLogin } = useContext(UserContext);
-  const [prompt, setPrompt] = useState("");
-  const [response, setResponse] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [state, setState] = useState(initialState.chatbot);
   const userId = useUserIdFromPath();
 
   useEffect(() => {
     checkLogin();
-  }, []);
+  }, [checkLogin]);
 
   const handleSubmit = async () => {
-    if (!prompt.trim()) return;
+    if (!state.prompt.trim()) return;
 
-    setLoading(true);
-    setError("");
-    setResponse("");
+    setState((prev) => ({ ...prev, loading: true, error: "", response: "" }));
 
     try {
-      const result = await sendChatPrompt(userId, prompt);
-      setResponse(result);
-      setPrompt("");
+      const result = await sendChatPrompt(userId, state.prompt);
+      setState((prev) => ({
+        ...prev,
+        response: result,
+        prompt: "",
+        loading: false,
+      }));
     } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+      setState((prev) => ({ ...prev, error: err.message, loading: false }));
     }
   };
 
@@ -46,17 +44,21 @@ const Chatbot = () => {
         <h1>Mental Health Companion</h1>
         <div className="chat-input-area">
           <textarea
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
+            value={state.prompt}
+            onChange={(e) =>
+              setState((prev) => ({ ...prev, prompt: e.target.value }))
+            }
             placeholder="Type your thoughts here..."
             rows="4"
           />
-          <button onClick={handleSubmit} disabled={loading}>
-            {loading ? "Processing..." : "Send"}
+          <button onClick={handleSubmit} disabled={state.loading}>
+            {state.loading ? "Processing..." : "Send"}
           </button>
         </div>
-        {error && <p className="error">{error}</p>}
-        {response && <div className="chat-response">{response}</div>}
+        {state.error && <p className="error">{state.error}</p>}
+        {state.response && (
+          <div className="chat-response">{state.response}</div>
+        )}
       </div>
     </>
   );
