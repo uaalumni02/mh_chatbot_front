@@ -11,12 +11,12 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { fetchMoodEntries, deleteAllMoodEntries } from "../api/graph";
+import initialState from "../store/store"; 
 import "../static/graph.css";
 
 const MoodTrendsGraph = () => {
   const { loggedIn, checkLogin } = useContext(UserContext);
-  const [moodEntries, setMoodEntries] = useState([]);
-  const [showModal, setShowModal] = useState(false);
+  const [state, setState] = useState(initialState.moodTrends); // Use the state from initialState
 
   const userId = window.location.pathname.split("/").pop(); // Extract once and reuse
 
@@ -25,7 +25,7 @@ const MoodTrendsGraph = () => {
     const loadMoodEntries = async () => {
       try {
         const data = await fetchMoodEntries(userId);
-        setMoodEntries(data);
+        setState((prevState) => ({ ...prevState, moodEntries: data }));
       } catch (err) {
         console.error("Error fetching mood data:", err.message);
       }
@@ -34,13 +34,16 @@ const MoodTrendsGraph = () => {
     loadMoodEntries();
   }, []);
 
-  const formattedData = useMemo(() => moodEntries, [moodEntries]);
+  const formattedData = useMemo(() => state.moodEntries, [state.moodEntries]);
 
   const handleDeleteAll = async () => {
     try {
       await deleteAllMoodEntries(userId);
-      setMoodEntries([]);
-      setShowModal(false);
+      setState((prevState) => ({
+        ...prevState,
+        moodEntries: [],
+        showModal: false,
+      }));
     } catch (err) {
       console.error("Error deleting mood data:", err.message);
     }
@@ -102,13 +105,18 @@ const MoodTrendsGraph = () => {
               </li>
             ))}
           </ul>
-          <button className="delete-button" onClick={() => setShowModal(true)}>
+          <button
+            className="delete-button"
+            onClick={() =>
+              setState((prevState) => ({ ...prevState, showModal: true }))
+            }
+          >
             Delete Chat
           </button>
         </div>
       </div>
 
-      {showModal && (
+      {state.showModal && (
         <div className="modal-overlay">
           <div className="modal-content">
             <h2>Confirm Deletion</h2>
@@ -118,7 +126,9 @@ const MoodTrendsGraph = () => {
             </button>
             <button
               className="cancel-button"
-              onClick={() => setShowModal(false)}
+              onClick={() =>
+                setState((prevState) => ({ ...prevState, showModal: false }))
+              }
             >
               Cancel
             </button>

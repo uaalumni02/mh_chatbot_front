@@ -22,6 +22,10 @@ const initialState = {
     loggedIn: false,
     loading: false,
   },
+  moodTrends: {
+    moodEntries: [],
+    showModal: false,
+  },
 };
 
 export default initialState;
