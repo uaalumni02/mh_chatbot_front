@@ -1,36 +1,45 @@
 import React, { useState } from "react";
 import { Navigate, Link } from "react-router-dom";
-import { registerUser } from "../api/register"; 
+import { registerUser } from "../api/register";
+import initialState from "../store/store";
 import "../static/login.css";
 
 const Register = () => {
-  const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [userId, setUserId] = useState("");
-  const [password, setPassword] = useState("");
-  const [invalidRegister, setInvalidRegister] = useState("");
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [register, setRegister] = useState(initialState.register);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setRegister((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setLoading(true);
-    setInvalidRegister("");
+    setRegister((prev) => ({ ...prev, loading: true, invalidRegister: "" }));
 
     try {
-      const response = await registerUser({ userName, email, password });
-      setUserId(response.userData.userId);
-      setLoggedIn(true);
+      const response = await registerUser({
+        userName: register.userName,
+        email: register.email,
+        password: register.password,
+      });
+      setRegister((prev) => ({
+        ...prev,
+        userId: response.userData.userId,
+        loggedIn: true,
+        loading: false,
+      }));
     } catch (error) {
-      setInvalidRegister(error.message);
-    } finally {
-      setLoading(false);
+      setRegister((prev) => ({
+        ...prev,
+        invalidRegister: error.message,
+        loading: false,
+      }));
     }
   };
 
   return (
     <div className="login-container">
-      {loggedIn ? <Navigate to={`/chat/${userId}`} /> : ""}
+      {register.loggedIn ? <Navigate to={`/chat/${register.userId}`} /> : ""}
       <div className="login-box">
         <h1>Welcome</h1>
         <p>Register to continue</p>
@@ -39,9 +48,10 @@ const Register = () => {
             <label>Username</label>
             <input
               type="text"
+              name="userName"
               placeholder="Enter username"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
+              value={register.userName}
+              onChange={handleChange}
               required
             />
           </div>
@@ -49,9 +59,10 @@ const Register = () => {
             <label>Email</label>
             <input
               type="email"
+              name="email"
               placeholder="Enter email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={register.email}
+              onChange={handleChange}
               required
             />
           </div>
@@ -59,17 +70,18 @@ const Register = () => {
             <label>Password</label>
             <input
               type="password"
+              name="password"
               placeholder="Enter password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={register.password}
+              onChange={handleChange}
               required
             />
           </div>
-          {invalidRegister && (
-            <p className="error-message">{invalidRegister}</p>
+          {register.invalidRegister && (
+            <p className="error-message">{register.invalidRegister}</p>
           )}
           <button type="submit" className="login-button">
-            {loading ? <span className="spinner"></span> : "Register"}
+            {register.loading ? <span className="spinner"></span> : "Register"}
           </button>
         </form>
         <p>

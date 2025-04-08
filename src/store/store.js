@@ -13,6 +13,15 @@ const initialState = {
     loading: false,
     error: "",
   },
+  register: {
+    userName: "",
+    email: "",
+    password: "",
+    userId: "",
+    invalidRegister: "",
+    loggedIn: false,
+    loading: false,
+  },
 };
 
 export default initialState;
