@@ -1,35 +1,51 @@
 import React, { useState, useContext, useEffect } from "react";
 import { UserContext } from "../contexts/UserContext";
 import Navbar from "./Navbar";
-import { submitJournalEntry } from "../api/journal"; // ✅ New import
 import "../static/journal.css";
 
 const Journal = () => {
   const { loggedIn, checkLogin } = useContext(UserContext);
-  const [entry, setEntry] = useState("");
-  const [submittedEntry, setSubmittedEntry] = useState("");
+
+  const [userName, setUserName] = useState("");
+  const [journal, setJournal] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  const userName = window.location.pathname.split("/").pop(); // Extract once and reuse
 
   useEffect(() => {
     checkLogin();
   }, []);
 
-  const handleJournalSubmit = async () => {
-    if (!entry.trim()) return;
+  const handleJournalSubmit = async (event) => {
+    event.preventDefault();
+    if (!journal.trim()) return;
+
+    const url = window.location.pathname;
+    const name = url.substring(url.lastIndexOf("/") + 1);
 
     setLoading(true);
     setError("");
-    setSubmittedEntry("");
 
     try {
-      await submitJournalEntry(userName, entry);
-      setSubmittedEntry(entry);
-      setEntry("");
+      const response = await fetch("http://localhost:3000/api/journal", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userName: name,
+          journal,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to submit journal entry.");
+      }
+
+      const data = await response.json();
+      console.log(data);
+      setJournal(""); // Clear the text box
     } catch (err) {
-      setError(err.message);
+      console.error(err);
+      setError(err.message || "Something went wrong.");
     } finally {
       setLoading(false);
     }
@@ -43,8 +59,8 @@ const Journal = () => {
         <h1>My Journal</h1>
         <div className="journal-input-area">
           <textarea
-            value={entry}
-            onChange={(e) => setEntry(e.target.value)}
+            value={journal}
+            onChange={(e) => setJournal(e.target.value)}
             placeholder="Reflect on your day, your feelings, or anything you’d like to explore..."
             rows="6"
           />
@@ -53,12 +69,6 @@ const Journal = () => {
           </button>
         </div>
         {error && <p className="error">{error}</p>}
-        {submittedEntry && (
-          <div className="journal-response">
-            <strong>Last Entry:</strong>
-            <p>{submittedEntry}</p>
-          </div>
-        )}
       </div>
     </>
   );
