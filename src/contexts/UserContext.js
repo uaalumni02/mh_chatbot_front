@@ -20,8 +20,6 @@ const UserContextProvider = (props) => {
   const checkLogin = () => {
     const token = getCookieValue("token");
 
-    console.log("Token:", token); // Debugging
-
     if (token) {
       setLoggedIn(true);
     } else {

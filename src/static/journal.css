@@ -110,4 +110,29 @@ body, html {
     font-size: 17px;
     font-weight: bold;
   }
+  .prediction-box {
+    margin-top: 8px;
+    background: #f0f0f0;
+    padding: 8px;
+    border-left: 3px solid #aaa;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    transition: background 0.3s ease;
+  }
+  
+  .prediction-box:hover {
+    background: #e2e2e2;
+  }
+  
+  .prediction-text {
+    font-weight: bold;
+    margin-left: 4px;
+  }
+  
+  .click-to-add {
+    margin-left: 10px;
+    font-size: 0.85rem;
+    color: #666;
+  }
   
